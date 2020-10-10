@@ -4,33 +4,28 @@ class TodoList {
   final String id;
   final String title;
   final List<Todo> todos;
-  final List<Todo> completed;
 
   TodoList({
     this.id,
     this.title,
     this.todos,
-    this.completed,
   });
 
   TodoList.fromMap(Map<dynamic, dynamic> map)
-      :
-        this.id = map['id'],
+      : this.id = map['id'],
         this.title = map['title'],
-        this.todos = todosFromMap(map['todos']),
-        this.completed = todosFromMap(map['completed']);
+        this.todos = todosFromMap(map['todos']);
 }
-List<Todo> todosFromMap( dynamic d){
-  
-  List<Todo> todos = [];
-  
-  if(d != null && d is Map<dynamic, dynamic>){
 
+List<Todo> todosFromMap(dynamic d) {
+  List<Todo> todos = [];
+
+  if (d != null && d is Map<dynamic, dynamic>) {
     Map<dynamic, dynamic> map = d;
 
     map.values.forEach((value) => todos.add(Todo.fromMap(value)));
   }
-  
+
   return todos;
 }
 
@@ -41,5 +36,15 @@ extension TodoExt on List<TodoList> {
     });
 
     return false;
+  }
+}
+
+extension TodoExtension on List<Todo> {
+  List<Todo> completed() {
+    return this.where((todo) => todo.completed == true).toList();
+  }
+
+  List<Todo> incompleted() {
+    return this.where((todo) => todo.completed == false).toList();
   }
 }

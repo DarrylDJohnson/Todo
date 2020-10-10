@@ -8,14 +8,10 @@ import 'todo_app_bar.dart';
 import 'todo_sliver.dart';
 
 class Body extends StatelessWidget {
-  final String id;
-
-  const Body({Key key, this.id}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: context.bloc<TodoCubit>().streamTodo(id),
+      stream: context.bloc<TodoCubit>().streamTodo(),
       builder: (context, snapshot) {
         TodoList todoList = snapshot.data;
 
@@ -24,11 +20,9 @@ class Body extends StatelessWidget {
               ? [
                   SliverPadding(padding: EdgeInsets.all(8.0)),
                   TodoAppBar(todoList: todoList),
-                  TodoSliver(todos: todoList.todos),
-                  SliverToBoxAdapter(
-                    child: Divider(thickness: 1.0),
-                  ),
-                  CompletedTodoSliver(todos: todoList.completed),
+                  TodoSliver(todos: todoList.todos.incompleted()),
+                  SliverToBoxAdapter(child: Divider(thickness: 1.0)),
+                  CompletedTodoSliver(todos: todoList.todos.completed()),
                 ]
               : [],
         );

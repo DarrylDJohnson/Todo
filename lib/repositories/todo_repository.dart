@@ -9,22 +9,6 @@ class TodoRepository {
   DatabaseReference get reference =>
       FirebaseDatabase.instance.reference().child('todos');
 
-  Stream<List<TodoList>> streamTodoLists() {
-    return reference.onValue.transform(
-      StreamTransformer.fromHandlers(
-        handleData: (event, sink) => sink.add(event.toTodoLists()),
-      ),
-    );
-  }
-
-  Stream<TodoList> streamTodoList(String id) {
-    return reference.child(id).onValue.transform(
-          StreamTransformer.fromHandlers(
-            handleData: (event, sink) => sink.add(event.toTodoList()),
-          ),
-        );
-  }
-
   Future<String> generateListId() async {
     return reference.push().key;
   }
@@ -40,36 +24,49 @@ class TodoRepository {
   }
 
   ///Todos
-  createTodo(Todo todo) async {
+  pushTodo(Todo todo) async {
     String id =
         todo.id ?? reference.child(await currentId).child('todos').push().key;
 
-    await reference
-        .child(await currentId)
-        .child('todos')
-        .child(id)
-        .set({'id': id, 'title': todo.title});
+    await reference.child(await currentId).child('todos').child(id).set({
+      'id': id,
+      'title': todo.title,
+      'completed': todo.completed ?? false,
+    });
   }
 
-  removeTodo(Todo todo) async => await reference
+  deleteTodo(Todo todo) async => await reference
       .child(await currentId)
       .child('todos')
       .child(todo.id)
       .remove();
 
-  completeTodo(Todo todo) async => await reference
-      .child(await currentId)
-      .child('completed')
-      .child(todo.id)
-      .set({'id': todo.id, 'title': todo.title});
-
-  removeCompleted(Todo todo) async => await reference
+  deleteCompleted(Todo todo) async => await reference
       .child(await currentId)
       .child('completed')
       .child(todo.id)
       .remove();
+}
 
-  ///Shared Preferences
+extension StreamExtension on TodoRepository {
+  Stream<List<TodoList>> streamLists() {
+    return reference.onValue.transform(
+      StreamTransformer.fromHandlers(
+        handleData: (event, sink) => sink.add(event.toTodoLists()),
+      ),
+    );
+  }
+
+  Stream<TodoList> streamList(String id) {
+    return reference.child(id).onValue.transform(
+          StreamTransformer.fromHandlers(
+            handleData: (event, sink) => sink.add(event.toTodoList()),
+          ),
+        );
+  }
+}
+
+extension SharedPreferencesExtension on TodoRepository {
   Future<String> get currentId => getSharedPreferences('id');
 
   Future<String> getSharedPreferences(String key) async {

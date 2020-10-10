@@ -14,13 +14,13 @@ class CompletedTodoTile extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       leading: IconButton(
         icon: Icon(MdiIcons.check),
-        onPressed: () => context.bloc<TodoCubit>().undoComplete(todo),
+        onPressed: () => context.bloc<TodoCubit>().pushTodo(todo.asIncompleted()),
       ),
       title: Text(
         todo.title,
         style: TextStyle(decoration: TextDecoration.lineThrough),
       ),
-      onTap: () => context.bloc<TodoCubit>().goToUpdateTodo(),
+      onTap: () => context.bloc<TodoCubit>().goToUpdateTodo(todo),
     );
   }
 }

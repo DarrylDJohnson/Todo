@@ -22,7 +22,7 @@ class TodoCubit extends Cubit<TodoState> {
     emit(TodoStateLoading());
 
     try {
-      List<TodoList> todoLists = await _todoRepository.streamTodoLists().first;
+      List<TodoList> todoLists = await _todoRepository.streamLists().first;
 
       String id = await _todoRepository.getSharedPreferences("id");
 
@@ -42,41 +42,56 @@ class TodoCubit extends Cubit<TodoState> {
 
   goToCreateTodo() => emit(TodoStateCreateTodo());
 
-  goToUpdateTodo() async {
-    emit(TodoStateUpdate());
+  goToUpdateTodo(Todo todo) async {
+    emit(TodoStateUpdate(todo: todo));
   }
 
-  goToTodo({String id}) async =>
+  goToList({String id}) async =>
       emit(TodoStateSuccess(id ?? await _todoRepository.currentId));
 }
 
-extension CRUDExtension on TodoCubit {
-  createTodo(Todo todo) async {
-    _todoRepository.createTodo(todo);
-    goToTodo();
+extension TodoExtension on TodoCubit {
+  pushTodo(Todo todo) async {
+    _todoRepository.pushTodo(todo);
+    goToList();
   }
 
+  deleteTodo(Todo todo) async {
+    _todoRepository.deleteTodo(todo);
+    goToList();
+  }
+}
+
+extension ListExtension on TodoCubit {
   createList(String title) async {
     String id = await _todoRepository.generateListId();
 
     await _todoRepository.createList(id, title);
 
-    goToTodo(id: id);
+    goToList(id: id);
   }
 
-  complete(Todo todo) async {
-    _todoRepository.removeTodo(todo);
-    _todoRepository.completeTodo(todo);
+  updateList(String title) async {
+    String id = await _todoRepository.generateListId();
+
+    await _todoRepository.createList(id, title);
+
+    goToList(id: id);
   }
 
-  undoComplete(Todo todo) async {
-    _todoRepository.removeCompleted(todo);
-    _todoRepository.createTodo(todo);
+  deleteList(String title) async {
+    String id = await _todoRepository.generateListId();
+
+    await _todoRepository.createList(id, title);
+
+    goToList(id: id);
   }
 }
 
 extension StreamExtension on TodoCubit {
-  Stream<List<TodoList>> streamTodos() => _todoRepository.streamTodoLists();
+  Stream<List<TodoList>> streamTodos() => _todoRepository.streamLists();
 
-  Stream<TodoList> streamTodo(String id) => _todoRepository.streamTodoList(id);
+  Stream<TodoList> streamTodo() async* {
+    yield* _todoRepository.streamList(await _todoRepository.currentId);
+  }
 }

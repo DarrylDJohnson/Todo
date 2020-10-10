@@ -68,7 +68,7 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
                 child: Text("done"),
                 textColor: Theme.of(context).accentColor,
                 onPressed: () {
-                  widget.cubit.createTodo(Todo(title: _controller.text));
+                  widget.cubit.pushTodo(Todo(title: _controller.text));
                   Navigator.of(context).pop(this);
                 },
               ),

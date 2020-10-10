@@ -26,14 +26,14 @@ class MainScreen extends StatelessWidget {
         child: BlocBuilder(
           cubit: context.bloc<TodoCubit>(),
           builder: (context, state) {
-            if (state is TodoStateSuccess) {
-              return TodoScreen(id: state.id);
+            if (state is TodoStateLoading) {
+              return LoadingScreen();
             } else if (state is TodoStateEmpty) {
               return EmptyScreen();
             } else if (state is TodoStateUpdate) {
               return UpdateScreen(todo: state.todo);
             } else {
-              return LoadingScreen();
+              return TodoScreen();
             }
           },
         ),

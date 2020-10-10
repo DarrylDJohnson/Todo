@@ -22,7 +22,7 @@ class TodoSection extends StatelessWidget {
             return ListTile(
               title: Text(todos[index].title),
               onTap: () {
-                todoCubit.goToTodo(id: todo.id);
+                todoCubit.goToList(id: todo.id);
                 Navigator.of(context).pop(this);
               },
             );

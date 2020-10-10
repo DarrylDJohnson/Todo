@@ -14,9 +14,12 @@ class TodoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(MdiIcons.circleOutline),
+      leading: IconButton(
+        icon: Icon(MdiIcons.circleOutline),
+        onPressed: () => context.bloc<TodoCubit>().pushTodo(todo.asCompleted()),
+      ),
       title: Text(todo.title),
-      onTap: () => context.bloc<TodoCubit>().complete(todo),
+      onTap: () => context.bloc<TodoCubit>().goToUpdateTodo(todo),
     );
   }
 }
