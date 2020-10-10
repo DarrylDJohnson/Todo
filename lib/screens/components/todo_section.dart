@@ -22,8 +22,7 @@ class TodoSection extends StatelessWidget {
             return ListTile(
               title: Text(todos[index].title),
               onTap: () {
-                print("onTap: ${todos[index].toString()}");
-                todoCubit.goToTodo(todo.id);
+                todoCubit.goToTodo(id: todo.id);
                 Navigator.of(context).pop(this);
               },
             );

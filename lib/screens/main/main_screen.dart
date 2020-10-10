@@ -6,6 +6,7 @@ import 'package:todo/screens/loading/loading_screen.dart';
 import 'package:todo/screens/todo/todo_screen.dart';
 import 'package:todo/screens/update/update_screen.dart';
 
+import 'components/create_list_bottom_sheet.dart';
 import 'components/create_todo_bottom_sheet.dart';
 
 class MainScreen extends StatelessWidget {
@@ -15,22 +16,10 @@ class MainScreen extends StatelessWidget {
     return BlocListener(
       cubit: context.bloc<TodoCubit>(),
       listener: (context, state) {
-        if (state is TodoStateCreate) {
-          todoBottomSheet(
-            context: context,
-            onComplete: (title) {
-              state.onComplete(title);
-              Navigator.of(context).pop(this);
-            },
-          );
-        } else if (state is TodoStateAdd) {
-          todoBottomSheet(
-            context: context,
-            onComplete: (title) {
-              state.onComplete(title);
-              Navigator.of(context).pop(this);
-            },
-          );
+        if (state is TodoStateCreateList) {
+          createListBottomSheet(context: context);
+        } else if (state is TodoStateCreateTodo) {
+          createTodoBottomSheet(context: context);
         }
       },
       child: SafeArea(
@@ -41,7 +30,7 @@ class MainScreen extends StatelessWidget {
               return TodoScreen(id: state.id);
             } else if (state is TodoStateEmpty) {
               return EmptyScreen();
-            } else if(state is TodoStateUpdate){
+            } else if (state is TodoStateUpdate) {
               return UpdateScreen(todo: state.todo);
             } else {
               return LoadingScreen();

@@ -34,7 +34,7 @@ class Menu extends StatelessWidget {
           leading: Icon(MdiIcons.plus),
           title: Text("Create new todo"),
           onTap: () {
-            todoCubit.create();
+            todoCubit.goToCreateList();
             Navigator.of(context).pop(this);
           },
         ),

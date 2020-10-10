@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/blocs/todo/todo_cubit.dart';
 
-createTodoBottomSheet({
+createListBottomSheet({
   BuildContext context,
+  Function(String) onComplete,
 }) =>
     showModalBottomSheet(
       context: context,
@@ -12,21 +13,22 @@ createTodoBottomSheet({
           top: Radius.circular(8.0),
         ),
       ),
-      builder: (_) => CreateTodoBottomSheet(
-        cubit: context.bloc<TodoCubit>(),
-      ),
+      builder: (_) => CreateListBottomSheet(cubit: context.bloc<TodoCubit>()),
     );
 
-class CreateTodoBottomSheet extends StatefulWidget {
+class CreateListBottomSheet extends StatefulWidget {
   final TodoCubit cubit;
 
-  const CreateTodoBottomSheet({Key key, this.cubit}) : super(key: key);
+  const CreateListBottomSheet({
+    Key key,
+    this.cubit,
+  }) : super(key: key);
 
   @override
-  _CreateTodoBottomSheetState createState() => _CreateTodoBottomSheetState();
+  _CreateListBottomSheetState createState() => _CreateListBottomSheetState();
 }
 
-class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
+class _CreateListBottomSheetState extends State<CreateListBottomSheet> {
   TextEditingController _controller;
 
   @override
@@ -68,7 +70,7 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
                 child: Text("done"),
                 textColor: Theme.of(context).accentColor,
                 onPressed: () {
-                  widget.cubit.createTodo(Todo(title: _controller.text));
+                  widget.cubit.createList( _controller.text);
                   Navigator.of(context).pop(this);
                 },
               ),

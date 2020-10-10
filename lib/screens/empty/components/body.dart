@@ -9,7 +9,7 @@ class Body extends StatelessWidget {
       child: ListTile(
         title: Text("No current todos"),
         subtitle: Text("click here to create a new todo"),
-        onTap: () => context.bloc<TodoCubit>().create(),
+        onTap: () => context.bloc<TodoCubit>().goToCreateList(),
       ),
     );
   }

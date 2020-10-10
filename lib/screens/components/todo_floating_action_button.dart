@@ -10,7 +10,7 @@ class TodoFloatingActionButton extends StatelessWidget {
       backgroundColor: Colors.grey.shade900,
       foregroundColor: Colors.white,
       child: Icon(MdiIcons.plus),
-      onPressed: () => context.bloc<TodoCubit>().add(),
+      onPressed: () => context.bloc<TodoCubit>().goToCreateTodo(),
     );
   }
 }

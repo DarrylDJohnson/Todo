@@ -7,24 +7,14 @@ abstract class TodoState extends Equatable {
   TodoState([List props = const []]) : super(props);
 }
 
-class TodoStateCreate extends TodoState {
-  final Function(String title) onComplete;
-
-  TodoStateCreate({
-    this.onComplete,
-  }) : super([onComplete]);
-
+class TodoStateCreateList extends TodoState {
   @override
-  String toString() => 'Create TodoList';
+  String toString() => 'Create List';
 }
 
-class TodoStateAdd extends TodoState {
-  final Function(String title) onComplete;
-
-  TodoStateAdd({this.onComplete}) : super([onComplete]);
-
+class TodoStateCreateTodo extends TodoState {
   @override
-  String toString() => 'Add Todo';
+  String toString() => 'Create Todo';
 }
 
 class TodoStateUpdate extends TodoState {

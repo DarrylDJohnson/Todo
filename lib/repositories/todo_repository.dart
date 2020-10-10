@@ -25,11 +25,11 @@ class TodoRepository {
         );
   }
 
-  Future<String> newTodoListId() async {
+  Future<String> generateListId() async {
     return reference.push().key;
   }
 
-  createTodoList(String id, String title) async {
+  createList(String id, String title) async {
     await reference.child(id).set({
       'id': id,
       'title': title,
@@ -40,7 +40,7 @@ class TodoRepository {
   }
 
   ///Todos
-  addTodo(Todo todo) async {
+  createTodo(Todo todo) async {
     String id =
         todo.id ?? reference.child(await currentId).child('todos').push().key;
 

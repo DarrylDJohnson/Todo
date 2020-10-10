@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:todo/blocs/todo/todo_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'components/body.dart';
 
@@ -15,6 +16,7 @@ class UpdateScreen extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(MdiIcons.arrowLeft),
+          onPressed: context.bloc<TodoCubit>().goToTodo(),
         ),
         actions: [
           IconButton(

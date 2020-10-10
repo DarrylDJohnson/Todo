@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/model/todo.dart';
 import 'package:todo/model/todo_list.dart';
@@ -18,7 +17,6 @@ class TodoCubit extends Cubit<TodoState> {
   TodoCubit({TodoRepository todoRepository})
       : _todoRepository = todoRepository ?? TodoRepository(),
         super(TodoStateLoading());
-
 
   load() async {
     emit(TodoStateLoading());
@@ -40,43 +38,30 @@ class TodoCubit extends Cubit<TodoState> {
     }
   }
 
-  create() async {
-    try {
-      String id = await _todoRepository.newTodoListId();
+  goToCreateList() => emit(TodoStateCreateList());
 
-      emit(TodoStateCreate(
-        onComplete: (title) => _todoRepository.createTodoList(id, title),
-      ));
+  goToCreateTodo() => emit(TodoStateCreateTodo());
 
-      emit(TodoStateSuccess(id));
-    } catch (e) {
-      emit(TodoStateError(e.toString()));
-    }
-  }
-
-  add() async {
-    try {
-      emit(TodoStateAdd(
-        onComplete: (title) => _todoRepository.addTodo(Todo(title: title)),
-      ));
-
-      emit(TodoStateSuccess(await _todoRepository.currentId));
-    } catch (e) {
-      emit(TodoStateError(e.toString()));
-    }
-  }
-
-  update() async {
+  goToUpdateTodo() async {
     emit(TodoStateUpdate());
   }
 
-  goToTodo(String id) async => emit(TodoStateSuccess(id));
+  goToTodo({String id}) async =>
+      emit(TodoStateSuccess(id ?? await _todoRepository.currentId));
 }
 
 extension CRUDExtension on TodoCubit {
+  createTodo(Todo todo) async {
+    _todoRepository.createTodo(todo);
+    goToTodo();
+  }
 
-  add(Todo todo) {
-    _todoRepository.addTodo(todo);
+  createList(String title) async {
+    String id = await _todoRepository.generateListId();
+
+    await _todoRepository.createList(id, title);
+
+    goToTodo(id: id);
   }
 
   complete(Todo todo) async {
@@ -86,7 +71,7 @@ extension CRUDExtension on TodoCubit {
 
   undoComplete(Todo todo) async {
     _todoRepository.removeCompleted(todo);
-    _todoRepository.addTodo(todo);
+    _todoRepository.createTodo(todo);
   }
 }
 

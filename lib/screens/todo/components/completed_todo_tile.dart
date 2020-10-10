@@ -20,7 +20,7 @@ class CompletedTodoTile extends StatelessWidget {
         todo.title,
         style: TextStyle(decoration: TextDecoration.lineThrough),
       ),
-      onTap: () => context.bloc<TodoCubit>().update(),
+      onTap: () => context.bloc<TodoCubit>().goToUpdateTodo(),
     );
   }
 }
