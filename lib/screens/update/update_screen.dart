@@ -15,26 +15,23 @@ class UpdateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        context.bloc<TodoCubit>().goToList();
-        return false;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(MdiIcons.arrowLeft),
-            onPressed: () => context.bloc<TodoCubit>().goToList(),
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(MdiIcons.trashCan),
-              onPressed: () => context.bloc<TodoCubit>().deleteTodo(todo),
-            )
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.black),
+        leading: IconButton(
+          icon: Icon(MdiIcons.arrowLeft),
+          onPressed: () => context.bloc<TodoCubit>().goToList(),
         ),
-        body: Body(),
+        actions: [
+          IconButton(
+            icon: Icon(MdiIcons.trashCan),
+            onPressed: () => context.bloc<TodoCubit>().deleteTodo(todo),
+          )
+        ],
       ),
+      body: Body(todo: todo),
     );
   }
 }

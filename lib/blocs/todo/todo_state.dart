@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/model/todo.dart';
+import 'package:todo/model/todo_list.dart';
 
 @immutable
 abstract class TodoState extends Equatable {
@@ -17,13 +18,22 @@ class TodoStateCreateTodo extends TodoState {
   String toString() => 'Create Todo';
 }
 
-class TodoStateUpdate extends TodoState {
+class TodoStatePushTodo extends TodoState {
   final Todo todo;
 
-  TodoStateUpdate({this.todo}) : super([todo]);
+  TodoStatePushTodo({this.todo}) : super([todo]);
 
   @override
   String toString() => 'Update Todo : ${todo.id}';
+}
+
+class TodoStateUpdateList extends TodoState {
+  final TodoList todoList;
+
+  TodoStateUpdateList(this.todoList) : super([todoList]);
+
+  @override
+  String toString() => 'Update List : ${todoList.id}';
 }
 
 class TodoStateLoading extends TodoState {

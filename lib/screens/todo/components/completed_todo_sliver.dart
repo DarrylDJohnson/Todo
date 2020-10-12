@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/blocs/todo/todo_cubit.dart';
 
-import 'completed_todo_tile.dart';
+import 'todo_tile.dart';
 
 class CompletedTodoSliver extends StatelessWidget {
   final List<Todo> todos;
@@ -31,7 +31,7 @@ class CompletedTodoSliver extends StatelessWidget {
                 ),
                 children: List.generate(
                   todos.length,
-                  (index) => CompletedTodoTile(todo: todos[index]),
+                  (index) => TodoTile(todo: todos[index]),
                 ),
               ),
             ),

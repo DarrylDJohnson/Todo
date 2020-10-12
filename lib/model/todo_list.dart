@@ -2,7 +2,7 @@ import 'package:todo/model/todo.dart';
 
 class TodoList {
   final String id;
-  final String title;
+  String title;
   final List<Todo> todos;
 
   TodoList({

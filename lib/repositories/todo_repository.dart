@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo/blocs/todo/todo_cubit.dart';
 import 'package:todo/model/todo.dart';
 import 'package:todo/model/todo_list.dart';
 
@@ -21,6 +22,32 @@ class TodoRepository {
       'todos': [],
       'completed': [],
     });
+  }
+
+  updateList(TodoList todoList) async {
+    await reference.child(todoList.id).update({
+      'title': todoList.title,
+      'timestamp': DateTime.now().toString(),
+    });
+  }
+
+  clearList(TodoList todoList) async {
+    DataSnapshot snapshot =
+        await reference.child(todoList.id).child('todos').once();
+
+    if (snapshot != null && snapshot.value != null) {
+      Map map = snapshot.value;
+      map.values.forEach((value) {
+        Todo todo = Todo.fromMap(value);
+        if (todo.completed == true) {
+          deleteTodo(todo);
+        }
+      });
+    }
+  }
+
+  deleteList(TodoList todoList) async {
+    await reference.child(todoList.id).remove();
   }
 
   ///Todos

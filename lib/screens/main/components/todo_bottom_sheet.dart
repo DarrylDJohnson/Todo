@@ -5,27 +5,33 @@ import 'package:todo/blocs/todo/todo_cubit.dart';
 import 'package:todo/screens/components/action_tile.dart';
 import 'package:todo/screens/main/components/borderless_text_field.dart';
 
-createTodoBottomSheet(BuildContext context) => showModalBottomSheet(
+todoBottomSheet(BuildContext context, Todo todo) => showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(8.0),
         ),
       ),
-      builder: (_) => CreateTodoBottomSheet(
+      builder: (_) => TodoBottomSheet(
         cubit: context.bloc<TodoCubit>(),
+        todo: todo,
       ),
     );
 
-class CreateTodoBottomSheet extends StatelessWidget {
+class TodoBottomSheet extends StatelessWidget {
   final TodoCubit cubit;
+  final Todo todo;
 
-  const CreateTodoBottomSheet({Key key, this.cubit}) : super(key: key);
+  const TodoBottomSheet({
+    Key key,
+    this.cubit,
+    this.todo,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String title = '';
-    String description = '';
+    String title = todo.title ?? '';
+    String description = todo.description ?? '';
 
     return Padding(
       padding:
@@ -36,10 +42,11 @@ class CreateTodoBottomSheet extends StatelessWidget {
           BorderlessTextField(
             hintText: 'new todo',
             onChange: (text) => title = text,
+            initialText: todo.title,
             trailing: IconButton(
               icon: Icon(MdiIcons.check),
               onPressed: () {
-                cubit.pushTodo(Todo(title: title, description: description));
+                cubit.pushTodo(todo.copyWith(title: title, description: description));
                 Navigator.of(context).pop(this);
               },
             ),
@@ -52,6 +59,7 @@ class CreateTodoBottomSheet extends StatelessWidget {
                 fontWeight: FontWeight.w700,
                 color: Colors.black54,
               ),
+              initialText: todo.description,
               hintText: 'description',
               onChange: (text) => description = text,
             ),

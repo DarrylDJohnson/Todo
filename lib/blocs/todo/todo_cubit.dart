@@ -42,9 +42,9 @@ class TodoCubit extends Cubit<TodoState> {
 
   goToCreateTodo() => emit(TodoStateCreateTodo());
 
-  goToUpdateTodo(Todo todo) async {
-    emit(TodoStateUpdate(todo: todo));
-  }
+  goToUpdateTodo(Todo todo) => emit(TodoStatePushTodo(todo: todo));
+
+  goToUpdateList(TodoList todoList) => emit(TodoStateUpdateList(todoList));
 
   goToList({String id}) async =>
       emit(TodoStateSuccess(id ?? await _todoRepository.currentId));
@@ -71,20 +71,21 @@ extension ListExtension on TodoCubit {
     goToList(id: id);
   }
 
-  updateList(String title) async {
-    String id = await _todoRepository.generateListId();
+  updateList(TodoList todoList) async {
+    await _todoRepository.updateList(todoList);
 
-    await _todoRepository.createList(id, title);
-
-    goToList(id: id);
+    goToList();
   }
 
-  deleteList(String title) async {
-    String id = await _todoRepository.generateListId();
+  void clearList(TodoList todoList) async {
+    await _todoRepository.clearList(todoList);
 
-    await _todoRepository.createList(id, title);
+    goToList();
+  }
 
-    goToList(id: id);
+  deleteList(TodoList todoList) async {
+    await _todoRepository.deleteList(todoList);
+    load();
   }
 }
 
